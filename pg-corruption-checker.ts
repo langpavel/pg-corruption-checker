@@ -1,31 +1,46 @@
 import { parseArgs } from "@std/cli";
-import { check, ConnectionOptions } from "./mod.ts";
-import { findPassword, checkPgPassPermissions } from "./utils/pgpass.ts";
-import { info, title, debug } from "./utils/log.ts";
+import { check } from "./mod.ts";
+import type { ConnectionOptions } from "./mod.ts";
+import { checkPgPassPermissions, findPassword } from "./utils/pgpass.ts";
+import { debug, info, title } from "./utils/log.ts";
 
 function printUsage() {
   title("Usage:");
-  console.log("  deno run --allow-net --allow-env --allow-read cli.ts [OPTIONS] [DBNAME]");
-  
+  console.log(
+    "  deno run --allow-net --allow-env --allow-read pg-corruption-checker.ts [OPTIONS] [DBNAME]",
+  );
+
   console.log("\nConnection options:");
   console.log("  -h, --host=HOSTNAME      Database server host");
   console.log("  -p, --port=PORT          Database server port");
-  console.log("  -d, --dbname=DBNAME      Database name (can also be provided as positional argument)");
+  console.log(
+    "  -d, --dbname=DBNAME      Database name (can also be provided as positional argument)",
+  );
   console.log("  -U, --username=USERNAME  Database user name");
-  console.log("  -W, --password=PASSWORD  Database password (can be loaded from ~/.pgpass)");
-  console.log("  -c, --connection=STRING  Connection string (overrides other options)");
-  
+  console.log(
+    "  -W, --password=PASSWORD  Database password (can be loaded from ~/.pgpass)",
+  );
+  console.log(
+    "  -c, --connection=STRING  Connection string (overrides other options)",
+  );
+
   console.log("\nOther options:");
   console.log("  --help                   Show this help message");
   console.log("  -v, --version            Show program version");
-  
+
   console.log("\nPassword management:");
-  console.log("  If no password is provided, the tool will try to load it from");
+  console.log(
+    "  If no password is provided, the tool will try to load it from",
+  );
   console.log("  the ~/.pgpass file, following the same rules as psql.");
-  
+
   console.log("\nExamples:");
-  console.log("  deno run -A cli.ts -h localhost -p 5432 -U postgres mydb");
-  console.log("  deno run -A cli.ts -h localhost -U postgres -d mydb");
+  console.log(
+    "  deno run -A pg-corruption-checker.ts -h localhost -p 5432 -U postgres mydb",
+  );
+  console.log(
+    "  deno run -A pg-corruption-checker.ts -h localhost -U postgres -d mydb",
+  );
 }
 
 // Main CLI entry point
@@ -64,10 +79,9 @@ if (import.meta.main) {
   }
 
   // Get database name from positional argument if provided
-  const dbname =
-    positionalArgs.length > 0
-      ? String(positionalArgs[0]) // First positional argument is dbname
-      : namedArgs.dbname; // Fall back to named argument
+  const dbname = positionalArgs.length > 0
+    ? String(positionalArgs[0]) // First positional argument is dbname
+    : namedArgs.dbname; // Fall back to named argument
 
   // Prepare connection options
   const options: ConnectionOptions = {
@@ -87,7 +101,7 @@ if (import.meta.main) {
         options.host,
         options.port || 5432,
         options.database || "",
-        options.username
+        options.username,
       );
 
       if (password) {

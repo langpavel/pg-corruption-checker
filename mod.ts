@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import postgres from "postgresjs";
-import { error, version } from "./utils/log.ts";
+import { error, info } from "./utils/log.ts";
 
 export type ConnectionOptions = {
   host?: string;
@@ -9,10 +9,6 @@ export type ConnectionOptions = {
   username?: string;
   password?: string;
 };
-
-export async function getVersionInfo(db: postgres.Sql<any>) {
-  return await db`SELECT version()`;
-}
 
 export function buildConnectionString(options: ConnectionOptions): string {
   const parts: string[] = [];
@@ -26,7 +22,9 @@ export function buildConnectionString(options: ConnectionOptions): string {
   return parts.join(" ");
 }
 
-export async function check(options: ConnectionOptions | string = {}) {
+export async function check(
+  options: ConnectionOptions | string = {},
+): Promise<boolean> {
   let db: postgres.Sql<any>;
 
   if (typeof options === "string") {
@@ -48,8 +46,8 @@ export async function check(options: ConnectionOptions | string = {}) {
   }
 
   try {
-    const versionInfo = await getVersionInfo(db);
-    version(versionInfo[0].version);
+    const result = await db`SELECT version()`;
+    info("Server version:", result[0].version);
     return true;
   } catch (err: any) {
     error(err.message);

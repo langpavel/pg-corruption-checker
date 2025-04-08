@@ -19,13 +19,13 @@ export interface PgPassEntry {
  */
 export function getPgPassPath(): string {
   const home = Deno.env.get("HOME") || Deno.env.get("USERPROFILE") || "";
-  
+
   // Check if PGPASSFILE environment variable is set
   const pgpassEnv = Deno.env.get("PGPASSFILE");
   if (pgpassEnv) {
     return pgpassEnv;
   }
-  
+
   // Default location is ~/.pgpass
   return join(home, ".pgpass");
 }
@@ -39,12 +39,12 @@ export function parsePgPassLine(line: string): PgPassEntry | null {
   if (line.startsWith("#") || line.trim() === "") {
     return null;
   }
-  
+
   const parts = line.split(":");
   if (parts.length !== 5) {
     return null;
   }
-  
+
   return {
     host: parts[0],
     port: parts[1],
@@ -66,7 +66,7 @@ function matchesPgPass(
   username: string,
 ): boolean {
   const portStr = typeof port === "number" ? port.toString() : port;
-  
+
   return (
     (entry.host === "*" || entry.host === host) &&
     (entry.port === "*" || entry.port === portStr) &&
@@ -85,29 +85,33 @@ export async function findPassword(
   username: string = "",
 ): Promise<string | null> {
   const pgpassPath = getPgPassPath();
-  
+
   // Check if the file exists
   if (!await exists(pgpassPath)) {
     return null;
   }
-  
+
   try {
     // Read the file and process it line by line
     const content = await Deno.readTextFile(pgpassPath);
     const lines = content.split(/\r?\n/);
-    
+
     for (const line of lines) {
       const entry = parsePgPassLine(line);
       if (!entry) continue;
-      
+
       if (matchesPgPass(entry, host, port, database, username)) {
         return entry.password;
       }
     }
-    
+
     return null;
   } catch (err) {
-    error(`Error reading pgpass file: ${err instanceof Error ? err.message : String(err)}`);
+    error(
+      `Error reading pgpass file: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
     return null;
   }
 }
@@ -119,12 +123,12 @@ export async function findPassword(
  */
 export async function checkPgPassPermissions(): Promise<boolean> {
   const pgpassPath = getPgPassPath();
-  
+
   // Check if the file exists
   if (!await exists(pgpassPath)) {
     return false;
   }
-  
+
   try {
     const fileInfo = await Deno.stat(pgpassPath);
     // Deno doesn't provide a direct way to check unix permissions

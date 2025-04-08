@@ -1,7 +1,15 @@
 {
+  "name": "@langpavel/pg-corruption-checker",
+  "version": "0.0.1",
+  "description": "PostgreSQL/TimescaleDB Corruption Checker",
+  "license": "MIT",
+  "exports": {
+    ".": "./mod.ts",
+    "./cli": "./pg-corruption-checker.ts"
+  },
   "tasks": {
-    "dev": "deno run --watch --allow-net --allow-env --allow-read cli.ts",
-    "check": "deno run --allow-net --allow-env --allow-read cli.ts",
+    "dev": "deno run --watch --allow-net --allow-env --allow-read pg-corruption-checker.ts",
+    "run": "deno run --allow-net --allow-env --allow-read pg-corruption-checker.ts",
     "test": "deno test --allow-net --allow-env --allow-read"
   },
   "imports": {

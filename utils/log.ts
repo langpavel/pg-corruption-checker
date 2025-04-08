@@ -1,4 +1,4 @@
-import { red, green, yellow, bold } from "@std/fmt/colors";
+import { bold, green, red } from "@std/fmt/colors";
 
 /**
  * Log an error message in red
@@ -15,17 +15,17 @@ export function success(message: string): void {
 }
 
 /**
- * Log an informational message in yellow
+ * Log an informational message
  */
-export function info(message: string): void {
-  console.log(yellow(`Info: ${message}`));
+export function info(...args: unknown[]): void {
+  console.info(...args);
 }
 
 /**
- * Log a debug message (no color)
+ * Log a debug message
  */
-export function debug(message: string): void {
-  console.log(message);
+export function debug(...args: unknown[]): void {
+  console.debug(...args);
 }
 
 /**
@@ -33,11 +33,4 @@ export function debug(message: string): void {
  */
 export function title(message: string): void {
   console.log(bold(message));
-}
-
-/**
- * Log the database version information
- */
-export function version(version: string): void {
-  console.log(yellow(`Server version: ${version}`));
 }
