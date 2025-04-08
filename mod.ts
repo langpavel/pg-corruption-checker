@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 import postgres from "postgresjs";
 import { error, info } from "./utils/log.ts";
+import { main as cliMain } from "./lib/cli.ts";
 
 export type ConnectionOptions = {
   host?: string;
@@ -55,4 +56,10 @@ export async function check(
   } finally {
     await db.end();
   }
+}
+
+// Execute CLI when run directly
+if (import.meta.main) {
+  const result = await cliMain();
+  Deno.exit(result ? 0 : 1);
 }

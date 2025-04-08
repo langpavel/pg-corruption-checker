@@ -1,13 +1,16 @@
 import { parseArgs } from "@std/cli";
-import { check } from "./mod.ts";
-import type { ConnectionOptions } from "./mod.ts";
-import { checkPgPassPermissions, findPassword } from "./utils/pgpass.ts";
-import { debug, info, title } from "./utils/log.ts";
+import { check } from "../mod.ts";
+import type { ConnectionOptions } from "../mod.ts";
+import { checkPgPassPermissions, findPassword } from "../utils/pgpass.ts";
+import { debug, info, title } from "../utils/log.ts";
 
-function printUsage() {
+/**
+ * Print CLI usage information
+ */
+export function printUsage(): void {
   title("Usage:");
   console.log(
-    "  deno run --allow-net --allow-env --allow-read pg-corruption-checker.ts [OPTIONS] [DBNAME]",
+    "  deno run --allow-net --allow-env --allow-read jsr:@langpavel/pg-corruption-checker [OPTIONS] [DBNAME]",
   );
 
   console.log("\nConnection options:");
@@ -35,20 +38,18 @@ function printUsage() {
   console.log("  the ~/.pgpass file, following the same rules as psql.");
 
   console.log("\nExamples:");
-  console.log(
-    "  deno run -A pg-corruption-checker.ts -h localhost -p 5432 -U postgres mydb",
-  );
-  console.log(
-    "  deno run -A pg-corruption-checker.ts -h localhost -U postgres -d mydb",
-  );
+  console.log("  deno run -A jsr:@langpavel/pg-corruption-checker -h localhost -p 5432 -U postgres mydb");
+  console.log("  deno run -A jsr:@langpavel/pg-corruption-checker -h localhost -U postgres -d mydb");
 }
 
-// Main CLI entry point
-if (import.meta.main) {
+/**
+ * CLI main entry point
+ */
+export async function main(args: string[] = Deno.args): Promise<boolean> {
   const {
     _: positionalArgs, // Capture positional arguments
     ...namedArgs
-  } = parseArgs(Deno.args, {
+  } = parseArgs(args, {
     string: ["host", "port", "dbname", "username", "password", "connection"],
     boolean: ["help", "version"],
     alias: {
@@ -64,18 +65,17 @@ if (import.meta.main) {
 
   if (namedArgs.help) {
     printUsage();
-    Deno.exit(0);
+    return true;
   }
 
   if (namedArgs.version) {
-    debug("TimescaleDB Corruption Checker version 1.0.0");
-    Deno.exit(0);
+    debug("PostgreSQL/TimescaleDB Corruption Checker v0.0.1");
+    return true;
   }
 
   // Use connection string if provided
   if (namedArgs.connection) {
-    await check(namedArgs.connection);
-    Deno.exit(0);
+    return await check(namedArgs.connection);
   }
 
   // Get database name from positional argument if provided
@@ -112,5 +112,5 @@ if (import.meta.main) {
     }
   }
 
-  await check(options);
+  return await check(options);
 }

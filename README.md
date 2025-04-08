@@ -26,11 +26,29 @@ cd pg-corruption-checker
 deno task run --help
 ```
 
+### As a Library
+
+```typescript
+import { check } from "@langpavel/pg-corruption-checker";
+
+// Check with connection string
+const result1 = await check("postgres://user:pass@localhost:5432/dbname");
+
+// Check with options object
+const result2 = await check({
+  host: "localhost",
+  port: 5432,
+  database: "mydb",
+  username: "user",
+  password: "pass"
+});
+```
+
 ## Usage
 
 ```
 Usage:
-  deno run --allow-net --allow-env --allow-read pg-corruption-checker.ts [OPTIONS] [DBNAME]
+  deno run --allow-net --allow-env --allow-read jsr:@langpavel/pg-corruption-checker [OPTIONS] [DBNAME]
 
 Connection options:
   -h, --host=HOSTNAME      Database server host
@@ -49,8 +67,8 @@ Password management:
   the ~/.pgpass file, following the same rules as psql.
 
 Examples:
-  deno run -A pg-corruption-checker.ts -h localhost -p 5432 -U postgres mydb
-  deno run -A pg-corruption-checker.ts -h localhost -U postgres -d mydb
+  deno run -A jsr:@langpavel/pg-corruption-checker -h localhost -p 5432 -U postgres mydb
+  deno run -A jsr:@langpavel/pg-corruption-checker -h localhost -U postgres -d mydb
 ```
 
 ## License
