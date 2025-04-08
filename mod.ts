@@ -1,10 +1,10 @@
-import { main as cliMain } from "./lib/cli.ts";
-import { 
+import { main } from "./lib/cli.ts";
+import {
   connectAndCheck,
   type ConnectionOptions,
   buildConnectionString,
   createConnection,
-  checkConnection
+  checkConnection,
 } from "./lib/db.ts";
 
 // Re-export the types and functions from lib/db.ts
@@ -18,6 +18,6 @@ export const check = connectAndCheck;
 
 // Execute CLI when run directly
 if (import.meta.main) {
-  const result = await cliMain();
+  const result = await main();
   Deno.exit(result ? 0 : 1);
 }
