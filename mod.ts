@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import postgres from "postgresjs";
-import { error, info } from "./utils/log.ts";
+import { error, info } from "./lib/log.ts";
 import { main as cliMain } from "./lib/cli.ts";
 
 export type ConnectionOptions = {

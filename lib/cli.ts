@@ -1,8 +1,8 @@
 import { parseArgs } from "@std/cli";
 import { check } from "../mod.ts";
 import type { ConnectionOptions } from "../mod.ts";
-import { checkPgPassPermissions, findPassword } from "../utils/pgpass.ts";
-import { debug, info, title } from "../utils/log.ts";
+import { checkPgPassPermissions, findPassword } from "./pgpass.ts";
+import { debug, info, title } from "./log.ts";
 
 /**
  * Print CLI usage information
