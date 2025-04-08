@@ -1,5 +1,6 @@
 import { exists } from "@std/fs";
 import { join } from "@std/path";
+import { error } from "./log.ts";
 
 /**
  * Represents a password entry from the .pgpass file
@@ -105,8 +106,8 @@ export async function findPassword(
     }
     
     return null;
-  } catch (error) {
-    console.error(`Error reading pgpass file: ${error instanceof Error ? error.message : String(error)}`);
+  } catch (err) {
+    error(`Error reading pgpass file: ${err instanceof Error ? err.message : String(err)}`);
     return null;
   }
 }
