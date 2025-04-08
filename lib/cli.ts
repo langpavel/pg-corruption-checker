@@ -1,6 +1,6 @@
 import { parseArgs } from "@std/cli";
-import { check } from "../mod.ts";
-import type { ConnectionOptions } from "../mod.ts";
+import { check } from "./db/check.ts";
+import type { ConnectionOptions } from "./db/types.ts";
 import { checkPgPassPermissions, findPassword } from "./pgpass.ts";
 import { info, warn } from "./log.ts";
 import { printUsage } from "./printUsage.ts";
