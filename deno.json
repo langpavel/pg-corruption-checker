@@ -8,6 +8,9 @@
     "postgresjs": "https://deno.land/x/postgresjs@v3.4.5/mod.js",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
-    "@std/cli": "jsr:@std/cli"
+    "@std/cli": "jsr:@std/cli",
+    "@std/fs": "jsr:@std/fs",
+    "@std/path": "jsr:@std/path",
+    "@std/toml": "jsr:@std/toml"
   }
 }
