@@ -38,3 +38,17 @@ code in this repository.
 - **Comments**: Document complex logic and exported functions
 - No unneeded comments
 - No classes with static methods, prefer functional approach
+
+## Commit Message Guidelines
+
+Follow semantic commit message format:
+
+- `feat:` - New feature (MINOR version bump)
+- `fix:` - Bug fix (PATCH version bump)
+- `feat!:` or containing `BREAKING CHANGE:` - Breaking API change (MAJOR version bump)
+- `docs:` - Documentation updates only
+- `style:` - Code style changes (formatting, missing semicolons, etc)
+- `refactor:` - Code changes that neither fix bugs nor add features
+- `perf:` - Performance improvements
+- `test:` - Adding or updating tests
+- `chore:` - Changes to the build process, tooling, etc
