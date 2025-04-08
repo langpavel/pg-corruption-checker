@@ -5,11 +5,11 @@ import { findPassword, checkPgPassPermissions } from "./pgpass.ts";
 
 function printUsage() {
   console.log(bold("Usage:"));
-  console.log("  deno run --allow-net --allow-env --allow-read cli.ts [OPTIONS]");
+  console.log("  deno run --allow-net --allow-env --allow-read cli.ts [OPTIONS] [DBNAME]");
   console.log("\nConnection options:");
   console.log("  -h, --host=HOSTNAME      Database server host");
   console.log("  -p, --port=PORT          Database server port");
-  console.log("  -d, --dbname=DBNAME      Database name");
+  console.log("  -d, --dbname=DBNAME      Database name (can also be provided as positional argument)");
   console.log("  -U, --username=USERNAME  Database user name");
   console.log("  -W, --password=PASSWORD  Database password (can be loaded from ~/.pgpass)");
   console.log("  -c, --connection=STRING  Connection string (overrides other options)");
@@ -19,11 +19,17 @@ function printUsage() {
   console.log("\nPassword management:");
   console.log("  If no password is provided, the tool will try to load it from");
   console.log("  the ~/.pgpass file, following the same rules as psql.");
+  console.log("\nExamples:");
+  console.log("  deno run -A cli.ts -h localhost -p 5432 -U postgres mydb");
+  console.log("  deno run -A cli.ts -h localhost -U postgres -d mydb");
 }
 
 // Main CLI entry point
 if (import.meta.main) {
-  const args = parseArgs(Deno.args, {
+  const {
+    _: positionalArgs, // Capture positional arguments
+    ...namedArgs
+  } = parseArgs(Deno.args, {
     string: ["host", "port", "dbname", "username", "password", "connection"],
     boolean: ["help", "version"],
     alias: {
@@ -37,29 +43,34 @@ if (import.meta.main) {
     }
   });
   
-  if (args.help) {
+  if (namedArgs.help) {
     printUsage();
     Deno.exit(0);
   }
   
-  if (args.version) {
+  if (namedArgs.version) {
     console.log("TimescaleDB Corruption Checker version 1.0.0");
     Deno.exit(0);
   }
   
   // Use connection string if provided
-  if (args.connection) {
-    await check(args.connection);
+  if (namedArgs.connection) {
+    await check(namedArgs.connection);
     Deno.exit(0);
   }
   
+  // Get database name from positional argument if provided
+  const dbname = positionalArgs.length > 0
+    ? String(positionalArgs[0]) // First positional argument is dbname
+    : namedArgs.dbname; // Fall back to named argument
+  
   // Prepare connection options
   const options: ConnectionOptions = {
-    host: args.host,
-    port: args.port ? Number(args.port) : undefined,
-    database: args.dbname,
-    username: args.username,
-    password: args.password,
+    host: namedArgs.host,
+    port: namedArgs.port ? Number(namedArgs.port) : undefined,
+    database: dbname, // Use the database name from positional or named argument
+    username: namedArgs.username,
+    password: namedArgs.password,
   };
   
   // If password not provided, try to find it in pgpass file
