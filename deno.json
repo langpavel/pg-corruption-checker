@@ -1,0 +1,13 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-env --allow-read cli.ts",
+    "check": "deno run --allow-net --allow-env --allow-read cli.ts",
+    "test": "deno test --allow-net --allow-env --allow-read"
+  },
+  "imports": {
+    "postgresjs": "https://deno.land/x/postgresjs@v3.4.5/mod.js",
+    "@std/assert": "jsr:@std/assert",
+    "@std/fmt": "jsr:@std/fmt",
+    "@std/cli": "jsr:@std/cli"
+  }
+}
