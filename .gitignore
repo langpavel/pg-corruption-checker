@@ -1,2 +1,56 @@
-# VS Code settings
-.vscode/
+# Deno specific
+/.deno/
+/deno.lock
+/node_modules/
+/npm-debug.log*
+/.env
+/.env.local
+/.env.development.local
+/.env.test.local
+/.env.production.local
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE specific
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace
+*.sublime-workspace
+
+# Generated files
+coverage/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs
+*.log
+
+# Test coverage
+coverage
+.nyc_output
+
+# Cache directories
+.npm
+.eslintcache
+.stylelintcache
