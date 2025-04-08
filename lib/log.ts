@@ -1,4 +1,4 @@
-import { bold, green, red, yellow, gray, brightBlue } from "@std/fmt/colors";
+import { bold, brightBlue, gray, green, red, yellow } from "@std/fmt/colors";
 
 /**
  * Log an error message in red

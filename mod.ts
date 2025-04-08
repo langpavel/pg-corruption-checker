@@ -1,15 +1,14 @@
 import { main } from "./lib/cli.ts";
 import {
+  checkConnection,
   connectAndCheck,
   type ConnectionOptions,
-  buildConnectionString,
   createConnection,
-  checkConnection,
 } from "./lib/db.ts";
 
 // Re-export the types and functions from lib/db.ts
 export type { ConnectionOptions };
-export { buildConnectionString, createConnection, checkConnection };
+export { checkConnection, createConnection };
 
 /**
  * Main check function - connects to database, checks connection and closes it

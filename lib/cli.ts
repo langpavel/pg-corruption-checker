@@ -42,10 +42,9 @@ export async function main(args: string[] = Deno.args): Promise<boolean> {
   }
 
   // Get database name from positional argument if provided
-  const dbname =
-    positionalArgs.length > 0
-      ? String(positionalArgs[0]) // First positional argument is dbname
-      : namedArgs.dbname; // Fall back to named argument
+  const dbname = positionalArgs.length > 0
+    ? String(positionalArgs[0]) // First positional argument is dbname
+    : namedArgs.dbname; // Fall back to named argument
 
   // Prepare connection options
   const options: ConnectionOptions = {
@@ -65,7 +64,7 @@ export async function main(args: string[] = Deno.args): Promise<boolean> {
         options.host,
         options.port || 5432,
         options.database || "",
-        options.username
+        options.username,
       );
 
       if (password) {

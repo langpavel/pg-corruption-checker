@@ -1,7 +1,7 @@
 # PostgreSQL/TimescaleDB Corruption Checker
 
-A simple command-line tool and library to check PostgreSQL and TimescaleDB database
-connections and verify database health.
+A simple command-line tool and library to check PostgreSQL and TimescaleDB
+database connections and verify database health.
 
 ## Features
 
@@ -31,10 +31,10 @@ deno task run --help
 ### As a Library
 
 ```typescript
-import { 
-  check, 
-  createConnection, 
-  checkConnection 
+import {
+  check,
+  checkConnection,
+  createConnection,
 } from "@langpavel/pg-corruption-checker";
 
 // Simple check with connection string (connects, checks, and closes connection)
@@ -46,7 +46,7 @@ const result2 = await check({
   port: 5432,
   database: "mydb",
   username: "user",
-  password: "pass"
+  password: "pass",
 });
 
 // Advanced usage - manage connection manually
@@ -55,13 +55,13 @@ const db = createConnection({
   port: 5432,
   database: "mydb",
   username: "user",
-  password: "pass"
+  password: "pass",
 });
 
 try {
   // Check connection
   const isConnected = await checkConnection(db);
-  
+
   if (isConnected) {
     // Run custom queries on the same connection
     const result = await db`SELECT current_database()`;
@@ -98,6 +98,44 @@ Password management:
 Examples:
   deno run -A jsr:@langpavel/pg-corruption-checker -h localhost -p 5432 -U postgres mydb
   deno run -A jsr:@langpavel/pg-corruption-checker -h localhost -U postgres -d mydb
+```
+
+## Development
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/langpavel/pg-corruption-checker.git
+cd pg-corruption-checker
+
+# Install Deno (if not already installed)
+# Mac/Linux
+curl -fsSL https://deno.land/install.sh | sh
+# Windows
+iwr https://deno.land/install.ps1 -useb | iex
+
+# Install VS Code extension for Deno
+# The repository includes .vscode/settings.json with proper configuration
+```
+
+### Development Commands
+
+```bash
+# Run in development mode with auto-reload
+deno task dev
+
+# Run tests
+deno task test
+
+# Format code
+deno task fmt
+
+# Check formatting
+deno task fmt:check
+
+# Run the CLI
+deno task run
 ```
 
 ## License

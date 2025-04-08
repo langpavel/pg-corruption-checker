@@ -11,21 +11,6 @@ export type ConnectionOptions = {
 };
 
 /**
- * Build a PostgreSQL connection string from options
- */
-export function buildConnectionString(options: ConnectionOptions): string {
-  const parts: string[] = [];
-
-  if (options.host) parts.push(`host=${options.host}`);
-  if (options.port) parts.push(`port=${options.port}`);
-  if (options.database) parts.push(`dbname=${options.database}`);
-  if (options.username) parts.push(`user=${options.username}`);
-  if (options.password) parts.push(`password=${options.password}`);
-
-  return parts.join(" ");
-}
-
-/**
  * Create a database connection from options or connection string
  */
 export function createConnection(
@@ -53,9 +38,7 @@ export function createConnection(
 /**
  * Check database connection and get version information
  */
-export async function checkConnection(
-  db: postgres.Sql<any>,
-): Promise<boolean> {
+export async function checkConnection(db: postgres.Sql<any>): Promise<boolean> {
   try {
     const result = await db`SELECT version()`;
     info("Server version:", result[0].version);
@@ -73,7 +56,7 @@ export async function connectAndCheck(
   options: ConnectionOptions | string = {},
 ): Promise<boolean> {
   const db = createConnection(options);
-  
+
   try {
     return await checkConnection(db);
   } finally {

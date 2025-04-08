@@ -9,7 +9,9 @@
   "tasks": {
     "dev": "deno run --watch --allow-net --allow-env --allow-read mod.ts",
     "run": "deno run --allow-net --allow-env --allow-read mod.ts",
-    "test": "deno test --allow-net --allow-env --allow-read"
+    "test": "deno test --allow-net --allow-env --allow-read",
+    "fmt": "deno fmt",
+    "fmt:check": "deno fmt --check"
   },
   "imports": {
     "postgresjs": "https://deno.land/x/postgresjs@v3.4.5/mod.js",
@@ -19,5 +21,22 @@
     "@std/fs": "jsr:@std/fs",
     "@std/path": "jsr:@std/path",
     "@std/toml": "jsr:@std/toml"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": false,
+    "proseWrap": "preserve",
+    "include": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.json",
+      "**/*.md"
+    ],
+    "exclude": ["node_modules", ".git"]
   }
 }
