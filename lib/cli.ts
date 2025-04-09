@@ -8,7 +8,7 @@ import { printUsage } from "./printUsage.ts";
 /**
  * CLI main entry point
  */
-export async function main(args: string[] = Deno.args): Promise<boolean> {
+export async function main(args: string[] = Deno.args): Promise<void> {
   const {
     _: positionalArgs, // Capture positional arguments
     ...namedArgs
@@ -28,17 +28,18 @@ export async function main(args: string[] = Deno.args): Promise<boolean> {
 
   if (namedArgs.help) {
     printUsage();
-    return true;
+    return;
   }
 
   if (namedArgs.version) {
     info("PostgreSQL/TimescaleDB Corruption Checker v0.0.1");
-    return true;
+    return;
   }
 
   // Use connection string if provided
   if (namedArgs.connection) {
-    return await check(namedArgs.connection);
+    await check(namedArgs.connection);
+    return;
   }
 
   // Get database name from positional argument if provided
@@ -75,5 +76,6 @@ export async function main(args: string[] = Deno.args): Promise<boolean> {
     }
   }
 
-  return await check(options);
+  await check(options);
+  return;
 }

@@ -1,4 +1,15 @@
 import { bold, brightBlue, gray, green, red, yellow } from "@std/fmt/colors";
+import { Spinner, type SpinnerOptions } from "@std/cli/unstable-spinner";
+
+export function spinner(options?: SpinnerOptions): Disposable & Spinner {
+  // deno-lint-ignore no-explicit-any
+  const spin: any = new Spinner(options);
+  spin[Symbol.dispose] = () => {
+    spin.stop();
+  };
+  spin.start();
+  return spin;
+}
 
 /**
  * Log an error message in red

@@ -16,6 +16,5 @@ export {
 
 // Execute CLI when run directly
 if (import.meta.main) {
-  const result = await main();
-  Deno.exit(result ? 0 : 1);
+  await main(Deno.args);
 }
