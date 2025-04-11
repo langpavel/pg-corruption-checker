@@ -50,5 +50,5 @@ export function debug(fmt: string, ...args: unknown[]): void {
  * Log a title/header in bold
  */
 export function title(fmt: string, ...args: unknown[]): void {
-  console.info(bold(`# ${fmt}`), ...args);
+  console.info(bold(`\n\n# ${fmt}`), ...args);
 }

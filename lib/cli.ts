@@ -1,9 +1,10 @@
 import { parseArgs } from "@std/cli";
 import { check } from "./db/check.ts";
-import type { ConnectionOptions } from "./db/types.ts";
+import type { ConnectionOptions } from "./db/createConnection.ts";
 import { checkPgPassPermissions, findPassword } from "./pgpass.ts";
 import { info, warn } from "./log.ts";
 import { printUsage } from "./printUsage.ts";
+import pkg from "../deno.json" with { type: "json" };
 
 /**
  * CLI main entry point
@@ -32,7 +33,7 @@ export async function main(args: string[] = Deno.args): Promise<void> {
   }
 
   if (namedArgs.version) {
-    info("PostgreSQL/TimescaleDB Corruption Checker v0.0.1");
+    info(`PostgreSQL/TimescaleDB Corruption Checker v${pkg.version}`);
     return;
   }
 

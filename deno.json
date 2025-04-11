@@ -1,17 +1,11 @@
 {
+  "$schema": "https://raw.githubusercontent.com/denoland/deno/refs/heads/main/cli/schemas/config-file.v1.json",
   "name": "@langpavel/pg-corruption-checker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "PostgreSQL/TimescaleDB Corruption Checker",
   "license": "MIT",
   "exports": {
     ".": "./mod.ts"
-  },
-  "tasks": {
-    "dev": "deno run --watch --allow-net --allow-env --allow-read mod.ts",
-    "run": "deno run --allow-net --allow-env --allow-read mod.ts",
-    "test": "deno test --allow-net --allow-env --allow-read",
-    "fmt": "deno fmt",
-    "fmt:check": "deno fmt --check"
   },
   "imports": {
     "postgresjs": "npm:postgres@3.4.5",
@@ -38,5 +32,46 @@
       "**/*.md"
     ],
     "exclude": ["node_modules", ".git"]
+  },
+
+  "tasks": {
+    "dev": {
+      "description": "Run the app in watch mode",
+      "command": "deno run --watch --allow-net --allow-env --allow-read --allow-sys mod.ts"
+    },
+    "run": {
+      "description": "Run the app",
+      "command": "deno run --allow-net --allow-env --allow-read --allow-sys mod.ts"
+    },
+    "run:help": {
+      "command": "deno run --allow-net --allow-env --allow-read --allow-sys mod.ts --help",
+      "description": "Report help help"
+    },
+    "fmt": {
+      "description": "Format source files",
+      "command": "deno fmt"
+    },
+    "fmt:check": {
+      "description": "Check if the source files are formatted correctly",
+      "command": "deno fmt --check"
+    },
+    "typecheck": {
+      "description": "Type-check the dependencies",
+      "dependencies": ["fmt", "lint"],
+      "command": "deno check './**/*.ts'"
+    },
+    "lint": {
+      "description": "Lint source files",
+      "dependencies": ["fmt"],
+      "command": "deno lint"
+    },
+    "check": {
+      "description": "Format, lint, typecheck",
+      "dependencies": [
+        "fmt",
+        "lint",
+        "typecheck"
+      ]
+    }
   }
 }

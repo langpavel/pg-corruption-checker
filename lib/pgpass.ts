@@ -75,14 +75,23 @@ function matchesPgPass(
   );
 }
 
+export const getCurrentUser = () => {
+  // Try various environment variables used across different systems
+  return Deno.env.get("USERNAME") || // Windows
+    Deno.env.get("USER") || // macOS/Linux
+    Deno.env.get("LOGNAME") || // Some Unix systems
+    Deno.env.get("SUDO_USER") || // When using sudo
+    "postgres";
+};
+
 /**
  * Reads the .pgpass file and finds a matching password
  */
 export async function findPassword(
   host: string = "localhost",
   port: string | number = 5432,
-  database: string = "",
-  username: string = "",
+  database: string = getCurrentUser(),
+  username: string = getCurrentUser(),
 ): Promise<string | null> {
   const pgpassPath = getPgPassPath();
 
