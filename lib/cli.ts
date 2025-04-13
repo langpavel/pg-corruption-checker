@@ -15,7 +15,7 @@ export async function main(args: string[] = Deno.args): Promise<void> {
     ...namedArgs
   } = parseArgs(args, {
     string: ["host", "port", "dbname", "username", "password", "connection"],
-    boolean: ["help", "version"],
+    boolean: ["help", "version", "no-analyze"],
     alias: {
       h: "host",
       p: "port",
@@ -39,7 +39,7 @@ export async function main(args: string[] = Deno.args): Promise<void> {
 
   // Use connection string if provided
   if (namedArgs.connection) {
-    await check(namedArgs.connection);
+    await check(namedArgs.connection, { skipAnalyze: namedArgs["no-analyze"] });
     return;
   }
 
@@ -77,6 +77,6 @@ export async function main(args: string[] = Deno.args): Promise<void> {
     }
   }
 
-  await check(options);
+  await check(options, { skipAnalyze: namedArgs["no-analyze"] });
   return;
 }

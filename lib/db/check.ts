@@ -37,6 +37,7 @@ export async function checkTable(
   options: ConnectionOptions,
   schema: string,
   tableName: string,
+  checkOptions: CheckOptions = {},
 ): Promise<void> {
   const sql = createConnection(options);
   try {
@@ -51,34 +52,38 @@ export async function checkTable(
         debug("  " + line["QUERY PLAN"]);
       }
 
-      info(`Explain analyze`);
+      if (!checkOptions.skipAnalyze) {
+        info(`Explain analyze`);
 
-      const pendingQuery = sql`${sql.unsafe(EXPLAIN_ANALYZE)} SELECT * FROM ${
-        sql(schema)
-      }.${sql(tableName)}`.execute();
+        const pendingQuery = sql`${sql.unsafe(EXPLAIN_ANALYZE)} SELECT * FROM ${
+          sql(schema)
+        }.${sql(tableName)}`.execute();
 
-      let terminateWorkReject: (reason?: Error) => void;
-      const terminateWork = new Promise<postgres.Row[]>((_, reject) => {
-        terminateWorkReject = reject;
-      });
+        let terminateWorkReject: (reason?: Error) => void;
+        const terminateWork = new Promise<postgres.Row[]>((_, reject) => {
+          terminateWorkReject = reject;
+        });
 
-      const handleTerminate = () => {
-        pendingQuery.cancel();
-        setTimeout(
-          () => terminateWorkReject(new Error("User terminated")),
-          100,
-        );
-      };
+        const handleTerminate = () => {
+          pendingQuery.cancel();
+          setTimeout(
+            () => terminateWorkReject(new Error("User terminated")),
+            100,
+          );
+        };
 
-      Deno.addSignalListener("SIGINT", handleTerminate);
-      try {
-        const result = await Promise.race([pendingQuery, terminateWork]);
-        for (const line of result) {
-          info("  " + JSON.stringify(line["QUERY PLAN"]));
+        Deno.addSignalListener("SIGINT", handleTerminate);
+        try {
+          const result = await Promise.race([pendingQuery, terminateWork]);
+          for (const line of result) {
+            info("  " + JSON.stringify(line["QUERY PLAN"]));
+          }
+          success(`- ${schema}.${tableName}`);
+        } finally {
+          Deno.removeSignalListener("SIGINT", handleTerminate);
         }
-        success(`- ${schema}.${tableName}`);
-      } finally {
-        Deno.removeSignalListener("SIGINT", handleTerminate);
+      } else {
+        success(`- ${schema}.${tableName} (skipped analyze)`);
       }
     }
   } catch (e) {
@@ -88,10 +93,17 @@ export async function checkTable(
   }
 }
 
+export interface CheckOptions {
+  skipAnalyze?: boolean;
+}
+
 /**
  * Connect to database, check connection and close it
  */
-export async function check(options: ConnectionOptions = {}): Promise<void> {
+export async function check(
+  options: ConnectionOptions = {},
+  checkOptions: CheckOptions = {},
+): Promise<void> {
   const sql = createConnection(options);
 
   try {
@@ -101,7 +113,7 @@ export async function check(options: ConnectionOptions = {}): Promise<void> {
       {
         const tables = await getTables(sql, schemaName);
         for (const { tableName } of tables) {
-          await checkTable(options, schemaName, tableName);
+          await checkTable(options, schemaName, tableName, checkOptions);
         }
       }
     }

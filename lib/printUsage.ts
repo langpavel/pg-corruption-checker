@@ -27,6 +27,7 @@ export function printUsage(): void {
   console.log("\nOther options:");
   console.log("  --help                   Show this help message");
   console.log("  -v, --version            Show program version");
+  console.log("  --no-analyze             Skip the EXPLAIN ANALYZE step");
 
   console.log("\nPassword management:");
   console.log(
